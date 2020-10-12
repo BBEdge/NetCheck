@@ -1,0 +1,41 @@
+ipddr            serial                   iftype       switchname                     port        
+10.112.50.209    2102311XBJ6TL3000953     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/37     
+                 2102311XBJ6TL3000953     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/37     
+10.112.50.212    2102311XBJ6TL3000954     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/40     
+                 2102311XBJ6TL3000954     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/40     
+10.112.50.202    2102311XBJ6TL3000958     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/30     
+                 2102311XBJ6TL3000958     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/30     
+10.112.50.207    2102311XBJ6TL3000964     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/35     
+                 2102311XBJ6TL3000964     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/35     
+10.112.50.208    2102311XBJ6TL3000966     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/36     
+                 2102311XBJ6TL3000966     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/36     
+10.112.50.199    2102311XBJ6TL3000988     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/27     
+                 2102311XBJ6TL3000988     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/27     
+10.112.50.201    2102311XBJ6TL3000989     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/29     
+                 2102311XBJ6TL3000989     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/29     
+10.112.50.198    2102311XBJ6TL3000990     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/26     
+                 2102311XBJ6TL3000990     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/26     
+10.112.50.197    2102311XBJ6TL3000992     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/25     
+                 2102311XBJ6TL3000992     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/25     
+10.112.50.211    2102311XBJ6TL3000995     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/39     
+                 2102311XBJ6TL3000995     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/39     
+10.112.50.204    2102311XBJ6TL3001000     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/32     
+                 2102311XBJ6TL3001000     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/32     
+10.112.50.205    2102311XBJ6TL3001002     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/33     
+                 2102311XBJ6TL3001002     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/33     
+10.112.50.206    2102311XBJ6TL3001004     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/34     
+                 2102311XBJ6TL3001004     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/34     
+10.112.50.194    2102311XBJ6TL3001056     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/22     
+                 2102311XBJ6TL3001056     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/22     
+10.112.50.195    2102311XBJ6TL3001058     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/23     
+                 2102311XBJ6TL3001058     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/23     
+10.112.50.193    2102311XBJ6TL3001060     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/21     
+                 2102311XBJ6TL3001060     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/21     
+10.112.50.210    2102311XBJ6TL3001083     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/38     
+                 2102311XBJ6TL3001083     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/38     
+10.112.50.196    2102311XBJ6TL3001115     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/24     
+                 2102311XBJ6TL3001115     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/24     
+10.112.50.200    2102311XBJ6TL3001116     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/28     
+                 2102311XBJ6TL3001116     Data Res     SKO-DATA-AC-044-J04-01-INT     Eth1/28     
+10.112.50.203    2102311XBJ6TL3001120     Data         SKO-DATA-AC-044-J04-01-INT     Eth1/31     
+                 2102311XBJ6TL3001120     Data Res     SKO-DATA-AC-044-I04-02-INT     Eth1/31     

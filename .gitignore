@@ -1,0 +1,6 @@
+/in/
+/out/
+*.db
+*.csv
+*.sql
+*.txt
