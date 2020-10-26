@@ -1,11 +1,11 @@
+#!/usr/bin/env python
+
 import os, re
 import sqlite3
 import fnmatch
 import pathlib
 import xlrd
 from paramiko import SSHClient, AuthenticationException, SSHException, AutoAddPolicy
-
-DBNAME = 'test.db'
 
 
 def comm_check():
@@ -56,7 +56,6 @@ def comm_check():
 
 
 def parse_row(taskname, item):
-    ''' '''
     ''' delete unused element '''
     for element in sorted([1, 2, 3, 4, 5, 8, 9, 10, 13, 14, 15, 16], reverse=True):
         del item[element]
@@ -65,8 +64,6 @@ def parse_row(taskname, item):
     sn = item[0]
     typeif = item[1]
     ipaddr = re.findall(r'(?<=ip_)(?:[0-9]{1,3}\.){3}[0-9]{1,3}|(?<=IP_)(?:[0-9]{1,3}\.){3}[0-9]{1,3}', item[2])
-    if not ipaddr:
-        ipaddr = '----'
     switchname = item[3]
     port = item[4]
     taskelement = (''.join(taskname) + ',' + ' '.join(ipaddr) + ',' + sn + ',' + typeif + ',' + switchname + ',' + port).split(',')
@@ -109,7 +106,8 @@ def write_file(fileout, taskelement):
             print('{:16s} {:24s} {:12s} {:30s} {:12s}'.format(*item), file=ftext)
 
 
-def main():
+def main(dbconn):
+    dbconn = dbconn
     host = 'localhost'
     user = 'root'
     #    pw = getpass.getpass('Switch password for user %s: ' % user)
@@ -117,16 +115,11 @@ def main():
     cmd_list = ['dmidecode -t 1 | grep Serial | awk -F ":" \'{print $2}\' | tr -d " "',
                 'cat /proc/net/dev | awk \'{print $1}\' | grep ":" | grep -v -E "bond|lo" | sed "s/://g"']
 
-
-    database = DBNAME
-    if os.path.exists(database):
-        dbconn = sqlite3.connect(database)
-
     ''' preparation of variables '''
     curpath = pathlib.Path(__file__).parent.absolute()
     dinput = os.path.join(curpath, 'in')
     doutput = os.path.join(curpath, 'out')
-    taskelement = []
+    task = []
 
     ''' preparing task files for parsing '''
     try:
@@ -155,23 +148,35 @@ def main():
                     item = sheet.row_values(i, 0)
                     if re.match(r'\w+', item[0]) and re.match(r'Data\w*', item[6]):
                         ''' call the data parsing function '''
-#                        taskelement.append(parse_row(item))
-                        taskitems = parse_row(taskname, item)
-
-                        ''' open cursor '''
-                        cur = dbconn.cursor()
-
-                        ''' insert task items '''
-                        cur.execute("insert into task (task_name, ipddr, serial, iftype, switchname, port) "
-                                    "values (?, ?, ?, ?, ?, ?)",
-                                    (taskitems[0], taskitems[1], taskitems[2], taskitems[3], taskitems[4], taskitems[5]))
-
-                '''commit and close database'''
-                dbconn.commit()
-                dbconn.close()
+                        task.append(parse_row(taskname, item))
 
                 ''' sorting elements on serial'''
-                taskelement.sort(key=lambda x: (x[1]), reverse=False)
+                task.sort(key=lambda x: (x[2]), reverse=False)
+
+                ''' update ipaddr if empty '''
+                for item in task:
+                    if (item[1] and item[2]):
+                        for row in task:
+                            if not row[1] and row[2] == item[2]:
+                                row[1] = item[1]
+
+                ''' insert task items to database '''
+                with dbconn:
+                    try:
+                        cursor = dbconn.cursor()
+                        for ele in task:
+                            cursor.execute("insert into task (task_name, ipddr, serial, iftype, switchname, port) "
+                                           "values (?, ?, ?, ?, ?, ?)",
+                                           (ele[0], ele[1], ele[2], ele[3], ele[4], ele[5]))
+                    except (Exception) as error:
+                        print('ERROR: ' + str(error))
+
+                    cursor.execute('SELECT * FROM task')
+                    results = cursor.fetchall()
+                    for row in results:
+                        print(row)
+
+                cursor.close()
 
                 ''' get connection '''
                 #                conn = connect(host, user, password)
@@ -180,13 +185,28 @@ def main():
                 #                cmdout = run_cmd(conn, cmd_list)
 
                 ''' write elements to file'''
-                write_file(fileout, taskelement)
+#                write_file(fileout, task)
 
     except Exception as e:
         print(e)
 
 
 if __name__ == '__main__':
+    ''' init database and connection '''
+
+    DATABASE = 'test.db'
+    if os.path.exists(DATABASE):
+        os.remove(DATABASE)
+        dbconn = sqlite3.connect(DATABASE)
+
+#    DATABASE = ":memory:"
+#    dbconn = sqlite3.connect(DATABASE)
+
+    with open('templates/schema.sql') as f:
+        dbconn.executescript(f.read())
+
     ''' call basic function '''
-#    main()
-    comm_check()
+    main(dbconn)
+
+    dbconn.close()
+#    comm_check()
