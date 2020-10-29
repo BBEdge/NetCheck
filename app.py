@@ -11,6 +11,7 @@ UPLOAD_FOLDER = 'upload'
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_EXTENSIONS'] = ['.xls', '.xls']
 
 @app.route('/')
 def index():
@@ -20,9 +21,13 @@ def index():
 
 @app.route('/', methods=['POST'])
 def upload_file():
+
     uploaded_file = request.files['file']
     if uploaded_file.filename != '':
         uploaded_file.save(os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename))
+    else:
+        return redirect(url_for('index'))
+        #return 'No selected file'
 
     uploaded_dir = app.config['UPLOAD_FOLDER']
     uploaded_file = uploaded_file.filename
@@ -33,13 +38,26 @@ def upload_file():
 
     ''' call the excel data parsing function '''
     taskdate, taskname = parsing.parsing_task(dbconn, uploaded_dir)
+    taskdate = ''.join(taskdate)
+    taskname = ''.join(taskname)
 
     ''' call the check communication function '''
     checkcomm.check_comm(dbconn)
 
     os.remove(os.path.join(uploaded_dir, uploaded_file))
 
-    return redirect(url_for('index'))
+    results = dbconn.execute('SELECT t.ipaddr, d.serial, d.dev, d.dev_state, d.dev_addr, d.dev_mac, d.dev_speed, '
+                             'd.bond, d.bond_state, d.bond_mac, d.bond_speed, d.bond_ip, d.bond_gw, t.iftype, '
+                             't.switchname, t.port, d.state '
+                             'FROM task t, devicelist d WHERE d.bond = "bond0" AND t.iftype = "Data" AND t.ipaddr = d.ipaddr UNION '
+                             'SELECT t.ipaddr, d.serial, d.dev, d.dev_state, d.dev_addr, d.dev_mac, d.dev_speed, '
+                             'd.bond, d.bond_state, d.bond_mac, d.bond_speed, d.bond_ip, d.bond_gw, t.iftype, '
+                             't.switchname, t.port, d.state '
+                             'FROM task t, devicelist d WHERE d.bond = "bond1" AND t.iftype = "Data Res" AND t.ipaddr = d.ipaddr').fetchall()
+
+    dbconn.close()
+    #return redirect(url_for('index'))
+    return render_template('result.html', taskdate=taskdate, taskname=taskname, results=results)
 
 
 if __name__ == '__main__':

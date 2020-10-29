@@ -1,8 +1,4 @@
-import os, re
-import sqlite3
-import fnmatch
-import pathlib
-
+import os, sqlite3, itertools
 
 def check_comm(dbconn):
     devicelist = []
@@ -22,15 +18,32 @@ def check_comm(dbconn):
             del(words[4])
             del(words[13:])
 
+            ''' create list '''
             devicelist.append(words)
 
+    ''' sorting devicelist'''
+    #value = set(map(lambda x:x[0], devicelist))
+    devicelist.sort(key=lambda x:(x[0]), reverse=False)
+
+    ''' group list by ipaddr '''
+    devkey = lambda x: x[0]
+    list_grouped = [list(group) for key, group in itertools.groupby(devicelist, devkey)]
 
     with dbconn:
         try:
             cursor = dbconn.cursor()
-            for ele in devicelist:
-                cursor.execute("insert into devicelist (ipaddr, serial, dev, dev_state, dev_name, dev_mac, dev_speed, bond, bond_state, bond_mac, bond_speed, bond_ip, bond_gate) "
-                               "values (?,?,?,?,?,?,?,?,?,?,?,?,?)", ele)
+
+            for g in range(len(list_grouped)):
+                for l in range(len(list_grouped[g])):
+                    if list_grouped[g][l][3] != 'UP' or list_grouped[g][l][8] != 'UP':
+                        list_grouped[g][l].append('FAIL')
+                    else:
+                        list_grouped[g][l].append('PASS')
+
+                    cursor.execute("insert into devicelist (ipaddr, serial, dev, dev_state, dev_addr, dev_mac, "
+                                   "dev_speed, bond, bond_state, bond_mac, bond_speed, bond_ip, bond_gw, state) "
+                                   "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", list_grouped[g][l])
+
         except sqlite3.Error as error:
                 print('ERROR: ' + str(error))
 

@@ -45,7 +45,7 @@ def parsing_task(dbconn, uploaded_dir):
                         task.append(parse_row(taskname, item))
 
                 ''' sorting elements on serial '''
-                task.sort(key=lambda x: (x[2]), reverse=False)
+                task.sort(key=lambda x:(x[2]), reverse=False)
 
                 ''' update ipaddr if empty '''
                 for item in task:
