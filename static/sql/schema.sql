@@ -10,13 +10,12 @@ CREATE TABLE IF NOT EXISTS task(
     port TEXT NOT NULL
 );
 
---ipaddr, serial, dev, dev_stat, dev_name, dev_mac, dev_speed, bond, bond_stat, bond_mac, bond_speed, bond_ip, bond_gate, check_status
 CREATE TABLE IF NOT EXISTS devicelist(
     ipaddr TEXT NOT NULL,
     serial TEXT NOT NULL,
-    dev TEXT NOT NULL,
-    dev_state TEXT NOT NULL,
     dev_name TEXT NOT NULL,
+    dev_state TEXT NOT NULL,
+    dev_addr TEXT NOT NULL,
     dev_mac TEXT NOT NULL,
     dev_speed TEXT NOT NULL,
     bond TEXT NOT NULL,

@@ -18,6 +18,15 @@ def index():
     return render_template('index.html', files=files)
 
 
+@app.route('/result', methods=('GET', 'POST'))
+def result():
+    taskdate = request.args['taskdate']
+    taskname = request.args['taskname']
+    results = request.args['results']
+
+    return render_template('result.html', taskdate=taskdate, taskname=taskname, results=results)
+
+
 @app.route('/', methods=['POST'])
 def upload_file():
     uploaded_file = request.files['file']
@@ -33,13 +42,25 @@ def upload_file():
 
     ''' call the excel data parsing function '''
     taskdate, taskname = parsing.parsing_task(dbconn, uploaded_dir)
+    taskdate = ''.join(taskdate)
+    taskname = ''.join(taskname)
 
     ''' call the check communication function '''
     checkcomm.check_comm(dbconn)
 
     os.remove(os.path.join(uploaded_dir, uploaded_file))
 
-    return redirect(url_for('index'))
+    results = dbconn.execute('SELECT t.ipaddr, d.serial, d.dev_name, d.dev_state, d.dev_addr, d.dev_mac, d.dev_speed, '
+                             'd.bond, d.bond_state, d.bond_mac, d.bond_speed, d.bond_ip, t.switchname, t.port, t.iftype '
+                            'FROM task t, devicelist d WHERE d.bond = "bond0" AND t.iftype = "Data" AND t.ipaddr = d.ipaddr UNION '
+                            'SELECT t.ipaddr, d.serial, d.dev_name, d.dev_state, d.dev_addr, d.dev_mac, d.dev_speed, '
+                             'd.bond, d.bond_state, d.bond_mac, d.bond_speed, d.bond_ip, t.switchname, t.port, t.iftype '
+                            'FROM task t, devicelist d WHERE d.bond = "bond1" AND t.iftype = "Data Res" AND t.ipaddr = d.ipaddr').fetchall()
+
+    dbconn.close()
+    #return redirect(url_for('index'))
+    #return redirect(url_for('result.html', taskdate=taskdate, taskname=taskname, results=results))
+    return render_template('result.html', taskdate=taskdate, taskname=taskname, results=results)
 
 
 if __name__ == '__main__':

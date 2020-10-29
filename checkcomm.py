@@ -1,8 +1,4 @@
-import os, re
-import sqlite3
-import fnmatch
-import pathlib
-
+import os, sqlite3
 
 def check_comm(dbconn):
     devicelist = []
@@ -29,7 +25,8 @@ def check_comm(dbconn):
         try:
             cursor = dbconn.cursor()
             for ele in devicelist:
-                cursor.execute("insert into devicelist (ipaddr, serial, dev, dev_state, dev_name, dev_mac, dev_speed, bond, bond_state, bond_mac, bond_speed, bond_ip, bond_gate) "
+                cursor.execute("insert into devicelist (ipaddr, serial, dev_name, dev_state, dev_addr, dev_mac, "
+                               "dev_speed, bond, bond_state, bond_mac, bond_speed, bond_ip, bond_gate) "
                                "values (?,?,?,?,?,?,?,?,?,?,?,?,?)", ele)
         except sqlite3.Error as error:
                 print('ERROR: ' + str(error))
