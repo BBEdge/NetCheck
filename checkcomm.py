@@ -1,5 +1,6 @@
 import os, sqlite3, itertools
 
+
 def check_comm(dbconn):
     devicelist = []
 

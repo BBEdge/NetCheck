@@ -19,6 +19,7 @@ def init_db():
 
     return dbconn
 
+
 if __name__ == '__main__':
     conn = init_db()
     conn.close()

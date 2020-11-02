@@ -21,7 +21,7 @@ def parse_row(taskname, item):
 
 
 def parsing_task(dbconn, uploaded_dir):
-    task = [] # the list with rows parsed
+    task = [] # the list with parsed rows
 
     ''' preparing files for parsing '''
     try:
