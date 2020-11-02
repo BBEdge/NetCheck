@@ -5,7 +5,7 @@ import sqlite3
 
 
 def parse_row(taskname, item):
-    ''' delete unused element '''
+    ''' delete unused elements '''
     for element in sorted([1, 2, 3, 4, 5, 8, 9, 10, 13, 14, 15, 16], reverse=True):
         del item[element]
 

@@ -1,3 +1,5 @@
 *.db
 *.txt
 *.log
+*.ini
+connect.py
