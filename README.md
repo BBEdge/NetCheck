@@ -19,4 +19,4 @@ Werkzeug==1.0.1
 xlrd==1.2.0  
 
 ##### Runing
-Just execute ./run.sh on app folder  
+Just execute ./run.sh on app folder.  
