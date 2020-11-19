@@ -2,4 +2,4 @@
 *.txt
 *.log
 *.ini
-connect.py
+srvconnect.py

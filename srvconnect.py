@@ -1,4 +1,5 @@
 import os
+import sqlite3
 import getpass
 import hashlib
 import configparser
@@ -29,12 +30,28 @@ def parameters(file):
     cf.close()
 
 
-def connect(host, user, password, ssh_timeout=120):
-    ''' actually connects to a switch.  returns a paramiko connection '''
-    try:
-        conn = SSHClient()
-        conn.set_missing_host_key_policy(AutoAddPolicy())
-        conn.connect(host, username=user, password=password, timeout=ssh_timeout)
+def connect(dbconn, ssh_timeout=10):
+    ''' get parameters from file'''
+    config.read('app.ini')
+    #host = config.get('server', 'host')
+    user = config.get('server', 'user')
+    password = config.get('server', 'password')
+
+    with dbconn:
+        try:
+            ipaddr = dbconn.execute('SELECT ipaddr FROM task WHERE iftype = "Data"')
+        except sqlite3.Error as error:
+            print("ERROR: ", str(error))
+
+
+    for row in ipaddr:
+        host = row[0]
+        print(host)
+        ''' actually connects to a switch.  returns a paramiko connection '''
+        try:
+            conn = SSHClient()
+            conn.set_missing_host_key_policy(AutoAddPolicy())
+            conn.connect(host, username=user, password=password, timeout=ssh_timeout)
 
         # Obtain session
         #session = client.get_transport().open_session()
@@ -44,10 +61,11 @@ def connect(host, user, password, ssh_timeout=120):
         # the remote end.
         #session.exec_command("git clone https://my.git.repository/")
 
-    except (AuthenticationException, SSHException) as error:
-        print('ERROR:   ', error)
+        except (AuthenticationException, SSHException, TimeoutError) as error:
+            print('ERROR:   ', error)
+            return error
 
-    return conn
+    #return conn
 
 
 def run_cmd(conn, cmd_list):
@@ -67,15 +85,3 @@ if __name__ == '__main__':
     ''' create parameters file '''
     if not os.path.exists(file):
         parameters(file)
-
-    ''' get parameters from file'''
-    config.read('app.ini')
-    host = config.get('server', 'host')
-    user = config.get('server', 'user')
-    password = config.get('server', 'password')
-
-    ''' get connection to server '''
-    conn = connect(host, user, password)
-
-    ''' run command on server '''
-    run_cmd(conn, cmd_list)
