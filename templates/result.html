@@ -14,8 +14,12 @@
 <body>
 <section class="result">
     <div class="alert alert-success" role="alert" style="width: 90%; margin-left: 100px">
-    {% block content %} <strong>Результат проверки заявки {{taskname}} от даты {{taskdate}}</strong> {% endblock %}
+        {% block content %}
+            <strong>Результат проверки заявки {{taskname}} от даты {{taskdate}}</strong>
+            <a></a>
+        {% endblock %}
     </div>
+
     <!--Table-->
     <div>
     <table class="table table-hover, small" style="margin-left: 100px; margin-right: 100px; width: 90%;

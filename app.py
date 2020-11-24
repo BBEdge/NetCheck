@@ -43,15 +43,19 @@ def upload_file():
     taskdate = ''.join(taskdate)
     taskname = ''.join(taskname)
 
+    ''' set log file name '''
+    logname = 'log/' + taskdate + '-' + taskname + '.log'
 
-    host = srvconnect.connect(dbconn)
+    ''' get information from servers '''
+    srvconnect.connect(dbconn, logname)
 
     ''' call the check communication function '''
-    #checkcomm.check_comm(dbconn)
+    checkcomm.check_comm(dbconn)
 
+    ''' remove task file '''
     os.remove(os.path.join(uploaded_dir, uploaded_file))
 
-    '''
+    ''' get results from db '''
     results = dbconn.execute('SELECT t.ipaddr, d.serial, d.dev, d.dev_state, d.dev_addr, d.dev_mac, d.dev_speed, '
                              'd.bond, d.bond_state, d.bond_mac, d.bond_speed, d.bond_ip, d.bond_gw, t.iftype, '
                              't.switchname, t.port, d.state '
@@ -60,11 +64,10 @@ def upload_file():
                              'd.bond, d.bond_state, d.bond_mac, d.bond_speed, d.bond_ip, d.bond_gw, t.iftype, '
                              't.switchname, t.port, d.state '
                              'FROM task t, devicelist d WHERE d.bond = "bond1" AND t.iftype = "Data Res" AND t.ipaddr = d.ipaddr').fetchall()
-    '''
 
     dbconn.close()
-    return redirect(url_for('index'))
-    #return render_template('result.html', taskdate=taskdate, taskname=taskname, results=results)
+    #return redirect(url_for('index'))
+    return render_template('result.html', taskdate=taskdate, taskname=taskname, results=results, logname=logname)
 
 
 if __name__ == '__main__':

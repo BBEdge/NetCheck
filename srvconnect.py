@@ -2,9 +2,10 @@ import os
 import sqlite3
 import getpass
 import hashlib
+import logging
 import configparser
 
-from paramiko import SSHClient, AuthenticationException, SSHException, AutoAddPolicy
+from paramiko import SSHClient, AutoAddPolicy
 
 file = 'app.ini'
 cmd_list = ['pwd']
@@ -30,10 +31,13 @@ def parameters(file):
     cf.close()
 
 
-def connect(dbconn, ssh_timeout=10):
+def connect(dbconn, logname, ssh_timeout=10):
+
+    ''' set logging config '''
+    logging.basicConfig(filename=logname, filemode='w', format='%(asctime)s - %(levelname)s - %(message)s')
+
     ''' get parameters from file'''
     config.read('app.ini')
-    #host = config.get('server', 'host')
     user = config.get('server', 'user')
     password = config.get('server', 'password')
 
@@ -43,27 +47,17 @@ def connect(dbconn, ssh_timeout=10):
         except sqlite3.Error as error:
             print("ERROR: ", str(error))
 
-
     for row in ipaddr:
         host = row[0]
-        print(host)
         ''' actually connects to a switch.  returns a paramiko connection '''
         try:
             conn = SSHClient()
             conn.set_missing_host_key_policy(AutoAddPolicy())
             conn.connect(host, username=user, password=password, timeout=ssh_timeout)
 
-        # Obtain session
-        #session = client.get_transport().open_session()
-        # Forward local agent
-        #AgentRequestHandler(session)
-        # Commands executed after this point will see the forwarded agent on
-        # the remote end.
-        #session.exec_command("git clone https://my.git.repository/")
-
-        except (AuthenticationException, SSHException, TimeoutError) as error:
-            print('ERROR:   ', error)
-            return error
+        except Exception as error:
+            logging.error('Connection to %s %s.' % (host, error))
+            #print('Connection to %s %s.' % (host, error))
 
     #return conn
 
