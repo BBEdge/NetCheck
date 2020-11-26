@@ -42,10 +42,6 @@ form:before {
     border-radius: 10px;
 }
 
-/*input[type="file"] {
-    display: none;
-}*/
-
 .custom-file-upload {
     border: 1px solid #ccc;
     display: inline-block;
@@ -53,3 +49,105 @@ form:before {
     cursor: pointer;
 }
 
+/* for modal loader */
+@keyframes load {
+    0%{
+        opacity: 0.08;
+/*         font-size: 10px; */
+/* 				font-weight: 400; */
+				filter: blur(5px);
+				letter-spacing: 3px;
+        }
+    100%{
+/*         opacity: 1; */
+/*         font-size: 12px; */
+/* 				font-weight:600; */
+/* 				filter: blur(0); */
+        }
+}
+
+.animate {
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	height:100%;
+	margin: auto;
+/* 	width: 350px; */
+/* 	font-size:26px; */
+	font-family: Helvetica, sans-serif, Arial;
+	animation: load 1.2s infinite 0s ease-in-out;
+	animation-direction: alternate;
+	text-shadow: 0 0 1px white;
+}
+
+/* modal box */
+.modalbox .box {
+    background-color: rgba(0,0,0,0.5);
+    margin: 0 auto;
+    min-width: 210px;
+    padding: 40px;
+    width: 25%;
+    /*margin-top: 100px;*/
+}
+.modalbox .title {
+    border-bottom: 1px solid #ccc;
+    font-family: verdana;
+    font-size: 22px;
+    letter-spacing: 0.2em;
+    margin: 0;
+    padding: 0 0 10px;
+    text-transform: uppercase;
+    color: #fff;
+}
+.modalbox .content {
+    display: block;
+    font-family: Verdana;
+    font-size: 18px;
+    line-height: 22px;
+    padding: 10px 0 0;
+    color: #fff;
+}
+.modalbox .close {
+    color: #fff;
+    display: block;
+    float: right;
+    font-family: Verdana;
+    font-size: 22px;
+    height: 25px;
+    text-decoration: none;
+}
+
+.modalbox {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    color:#333333;
+}
+
+.modalbox:target {
+    display: block;
+    outline: none;
+}
+
+.link-modal {
+    width: 90%;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 400px;
+    padding-left: 15px;
+}
+
+.link-modal a {
+    border: 1px solid #fff;
+    color: #fff;
+    font-family: Verdana;
+    font-size: 20px;
+    letter-spacing: 0.3em;
+    padding: 10px;
+    text-decoration: none;
+    text-transform: uppercase;
+}

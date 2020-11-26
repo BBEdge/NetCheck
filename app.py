@@ -47,7 +47,7 @@ def upload_file():
     logname = 'log/' + taskdate + '-' + taskname + '.log'
 
     ''' get information from servers '''
-    srvconnect.connect(dbconn, logname)
+    #srvconnect.connect(dbconn, logname)
 
     ''' call the check communication function '''
     checkcomm.check_comm(dbconn)
@@ -66,8 +66,12 @@ def upload_file():
                              'FROM task t, devicelist d WHERE d.bond = "bond1" AND t.iftype = "Data Res" AND t.ipaddr = d.ipaddr').fetchall()
 
     dbconn.close()
+
+    with open(logname, "r") as file:
+        logcontent = file.readlines()
+
     #return redirect(url_for('index'))
-    return render_template('result.html', taskdate=taskdate, taskname=taskname, results=results, logname=logname)
+    return render_template('result.html', taskdate=taskdate, taskname=taskname, results=results, logcontent=logcontent)
 
 
 if __name__ == '__main__':
